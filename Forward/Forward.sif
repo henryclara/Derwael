@@ -159,7 +159,42 @@ End
 !---------------------------------------------------
 !---------------- SOLVERS --------------------------
 !---------------------------------------------------
+
 Solver 1
+  Exec Solver = Before All
+  Equation = Reader
+  Procedure = "GridDataReader" "GridDataReader"
+
+  !---- NOTE: File is case sensitive, String is not!
+  Filename = File "Derwael.nc"
+  !Time Dim Name = String "time"
+  X Dim Name = String "x"
+  Y Dim Name = String "y"
+
+  !Time Var Name = String "time"
+  X Var Name = String "x"
+  Y Var Name = String "y"
+
+  !--- Interpolation variables
+  X Epsilon  = Real 1.0e-2
+  Y Epsilon  = Real 1.0e-2
+  Time Epsilon  = Real 0.01
+
+  Interpolation Bias = Real 0.0
+  Interpolation Multiplier = Real 1.0
+
+  Is Time Counter = Logical True
+
+  Variable 1 = File "bedrock"
+  Variable 2 = File "zs"
+  Variable 3 = File "zb"
+  Variable 4 = File "VX"
+  Variable 5 = File "VY"
+
+  Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
+End
+
+Solver 2
   Exec Solver = Before Simulation
   Equation = "MapCoordinateInit"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
@@ -177,7 +212,7 @@ Solver 1
   Minimum Height = Real 1.0
 End
 
-Solver 2
+Solver 3
   !Exec Solver = Never
   Equation = "NormalVector"
   Procedure = "ElmerIceSolvers" "ComputeNormalSolver"
@@ -188,7 +223,7 @@ Solver 2
   Optimize Bandwidth = Logical False
 End
 
-Solver 3
+Solver 4
   !Exec Solver = Never
   Equation = Fw
   Procedure = "ElmerIceSolvers" "GetHydrostaticLoads"
@@ -196,7 +231,7 @@ Solver 3
   Variable DOFs = 3
 End
 
-Solver 4
+Solver 5
   !Exec Solver = Never
   Equation = "Navier-Stokes"
 	Optimize Bandwidth = Logical True
@@ -224,7 +259,7 @@ Solver 4
   Flow Model = String "Stokes"
 End
 
-Solver 5
+Solver 6
   Exec Solver = Never
   Equation = String "StressSolver"
   Procedure =  File "ElmerIceSolvers" "ComputeDevStress"
@@ -248,7 +283,7 @@ Solver 5
    Linear System Residual Output = 1
 End
 
-Solver 6
+Solver 7
   !Exec Solver = Never
   Equation = "HeightDepth"
   Procedure = "StructuredProjectToPlane" "StructuredProjectToPlane"
@@ -260,7 +295,7 @@ Solver 6
   Operator 3 = Bottom
 End
 
-Solver 7
+Solver 8
    !Exec Solver = Never
    Equation = "SolveDistance"
 
@@ -289,7 +324,7 @@ Solver 7
 
 End
 
-Solver 8
+Solver 9
   !Exec Solver = Never
   Equation = "Free Surface Top"
   Procedure =  "./src/MyFreeSurfaceSolver" "FreeSurfaceSolver"
@@ -322,7 +357,7 @@ Solver 8
   Relaxation Factor = Real 1.0
 End
 
-Solver 9
+Solver 10
   !Exec Solver = Never
   Equation = "Free Surface Sea/Shelf"
   Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
@@ -359,7 +394,7 @@ Solver 9
   Relaxation Factor = Real 1.0
 End
 
-Solver 10
+Solver 11
   Equation = "MapCoordinate"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
 
@@ -376,7 +411,7 @@ Solver 10
   Minimum Height = Real 1.0
 End
 
-Solver 11
+Solver 12
   !Exec Solver = Never
   Equation = GroundedMask
   Procedure = "ElmerIceSolvers" "GroundedSolver"
@@ -387,12 +422,12 @@ Solver 11
   Bedrock Variable = String "bedrock"
 End
 
-Solver 12
+Solver 13
   Procedure = "SaveData" "SaveMaterials"
   Parameter 1 = String "Sea Level"
 End
 
-Solver 13
+Solver 14
   Exec Solver = After Saving
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
@@ -401,7 +436,7 @@ Solver 13
   Output Format = String vtu
 End
 
-Solver 14
+Solver 15
   Equation = "Flowdepth"
    Exec Solver = "Never"
    Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
@@ -432,7 +467,7 @@ End
 !---------------------------------------------------
 
 Equation 1
-  Active Solvers (9) = 1 2 4 5 6 10 12 13 14
+  Active Solvers (10) = 1 2 3 5 6 7 11 13 14 15
 End
 
 Equation 2
@@ -455,7 +490,7 @@ End
 Boundary Condition 1
   Name = "back"
   Target Boundaries = 2
-	Velocity 2 = Real 200.0
+	Velocity 2 = Equals VY
 	!Velocity 1 = Variable FluxInit
 	!	Real Procedure "src/BedrockBump" "IceFluxAtBack"
 	Velocity 1 = Real 0.0
