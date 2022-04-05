@@ -161,12 +161,13 @@ End
 !---------------------------------------------------
 
 Solver 1
-  Exec Solver = Before All
+  Exec Solver = Never
+  !Exec Solver = Before All
   Equation = Reader
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael_velocities.nc"
+  Filename = File "Derwael.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
