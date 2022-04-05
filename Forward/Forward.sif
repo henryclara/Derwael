@@ -13,7 +13,7 @@ $A = 4.6e-25*yearinsec*1.0e18
 $n = 3.0
 $eta = 1.0/(2.0*A)^(1.0/n)
 $gravity = -9.8*yearinsec^2
-$C = 3.812e6/(1.0e6*yearinsec^(1.0/3.0))
+$C = 3.812e7/(1.0e6*yearinsec^(1.0/3.0))
 
 
 Header
@@ -37,7 +37,7 @@ End
 Simulation
   Coordinate System  = Cartesian 3D
   Simulation Type = transient
-  Extruded Mesh Levels = Integer 30
+  Extruded Mesh Levels = Integer 10
 
   Timestepping Method = "bdf"
   BDF Order = 1
