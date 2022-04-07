@@ -7,7 +7,7 @@
 #SBATCH --account=bm1164
 #SBATCH --mail-user=clara.henry@mpimet.mpg.de
 #SBATCH --ntasks=80
-#SBATCH --time=08:0:00
+#SBATCH --time=08:00:00
 #SBATCH --partition=compute,compute2
 #=================================================================================================================
 set -e
