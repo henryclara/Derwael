@@ -78,8 +78,8 @@ Solver 1
   Variable 1 = File "bedrock"
   Variable 2 = File "zs"
   Variable 3 = File "zb"
-  Variable 4 = File "VX"
-  Variable 5 = File "VY"
+  Variable 4 = File "vx"
+  Variable 5 = File "vy"
 
   Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
 End
