@@ -12,7 +12,7 @@ cd Simulations/${Name}
 # Set up a counter for keeping track of the number of outputs
 Counter=$1
 
-while [ ${Counter} -lt "1" ]; do
+while [ "${Counter}" -lt "1" ]; do
 
 # This line creates a directory for the first set of output simulations
 mkdir -p Output$(printf "%06d" ${Counter} )	
