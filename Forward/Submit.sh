@@ -5,6 +5,7 @@
 #SBATCH -J Forward
 #SBATCH --get-user-env
 #SBATCH --account=bm1164
+#SBATCH --mail-user=clara.henry@mpimet.mpg.de
 #SBATCH --ntasks=80
 #SBATCH --time=08:0:00
 #SBATCH --partition=compute,compute2
