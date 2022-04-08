@@ -37,20 +37,20 @@ End
 Simulation
   Coordinate System  = Cartesian 3D
   Simulation Type = transient
-  Extruded Mesh Levels = Integer 10
+  Extruded Mesh Levels = Integer 20
 
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 1000
   Output Intervals = 1
-  Timestep Sizes = 0.5
+  Timestep Sizes = 0.01
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
   Steady State Min Iterations = 1
 
-	Restart File="Forward000000.result"
-	!Restart File="../../Init/Mesh/InitVel000000.result"
+	!Restart File="Forward000000.result"
+	Restart File="../../Init/Mesh/InitVel000000.result"
 	Restart Before Initial Conditions = Logical True
 	!Specify name of result file. Used for restarts!!
   Output File = "Forward000000.result"
