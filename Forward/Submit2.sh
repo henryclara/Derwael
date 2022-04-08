@@ -1,7 +1,7 @@
 #!/bin/bash
-#SBATCH -o /work/bm1164/m300832/Derwael/Forward/Logs/SLURM_job.%j.%N.out
-#SBATCH -e /work/bm1164/m300832/Derwael/Forward/Logs/SLURM_job.%j.%N.err
-#SBATCH -D /work/bm1164/m300832/Derwael/Forward/
+#SBATCH -o Logs/SLURM_job.%j.%N.out
+#SBATCH -e Logs/SLURM_job.%j.%N.err
+#SBATCH -D .
 #SBATCH -J Forward
 #SBATCH --get-user-env
 #SBATCH --account=bm1164
@@ -31,7 +31,7 @@ echo $ELMER_SOLVER_HOME
 make compile
 make ini
 make grid
-srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
+srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward2.sif
 #if [ "${YearCounter}" -lt "1000" ]; then
 #	if [ "1" -eq 1 ]; then
 #					cp Mesh/*result* /work/bm1164/m300832/CodeThatWorks/SyntheticExperiments//Tolerance6/Forward/Mesh/
