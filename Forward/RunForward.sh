@@ -4,15 +4,17 @@
 
 # Indicate a name for the new simulation
 Name=SimName
+Counter=$1
 
 # Create a directory to store model output
-mkdir -p Simulations/${Name}/Mesh
-cp Forward.sif Simulations/${Name}
-cp Submit.sh Simulations/${Name}
-cp Derwael2.nc Simulations/${Name}
-cp SMB_Derval2.nc Simulations/${Name}
-cp ModulesPlusPathsMistralGCC71.sh Simulations/${Name}
-cp -r src Simulations/${Name}
+mkdir -p Simulations/${Name}/{Mesh,Logs,Output$(printf "%06d" ${Counter})
+cp Mesh/{mesh*,partitioning.80,*result*} Simulations/${Name}/Mesh
+cp -r {Forward2.sif,Submit2.sh,Derwael2.nc,SMB_Derval2.nc,ModulesPlusPathsMistralGCC71.sh,Makefile,src} Simulations/${Name}
+
+cd Simulations/${Name} 
+sbatch Submit2.sh
+
+
 
 
 
