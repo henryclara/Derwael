@@ -96,6 +96,7 @@ Initial Condition 1
   Velocity 3 = Real 0.0
   FluxInit = Real 90000
   Bedrock = Equals bedrock
+  Age = Real 0.0
 End
 
 !! for top free surface
@@ -420,6 +421,30 @@ Solver 11
 End
 
 Solver 12
+  ! This solver should be off if Navier-Stokes isn't solved
+  Exec Solver = Never
+  Equation = "Age Equation"
+
+  Variable = String "Age"
+  Variable DOFs =  1 
+
+  Flow Solution Name = String "Flow Solution"
+  !Linear System Solver = Iterative
+  !Linear System Max Iterations = 1000 
+  !Linear System Iterative Method = Diagonal
+  !Linear System Preconditioning = NoNe 
+  !Linear System Convergence Tolerance = Real 1.0e-6
+  !Linear System Abort Not Converged = False
+  !Linear System Residual Output = 0
+  Linear System Solver = Direct
+  Linear System Direct Method = mumps
+  mumps percentage increase working space = integer 1000 
+
+  Procedure = "./src/AgeSolverRD" "AgeSolver"
+  Exported Variable 1 = -dofs 1 "age"
+End
+
+Solver 13
   Exec Solver = After Saving
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
@@ -434,7 +459,9 @@ End
 !---------------------------------------------------
 
 Equation 1
-  Active Solvers (7) = 1 2 4 6 7 8 12 
+  Active Solvers (8) = 1 2 4 6 7 8 12 13
+  Flow Solution Name = String "Flow Solution"
+  Convection = String Computed
 End
 
 Equation 2
@@ -456,6 +483,7 @@ End
 !! Back
 Boundary Condition 1
   Name = "back"
+  Age = Real 0.0
   Target Boundaries = 1
 	Velocity 1 = Real 136
 	!Velocity 1 = Variable Height
@@ -554,4 +582,5 @@ Boundary Condition 6
   Target Boundaries = 6
   Body Id = 2
   ComputeNormal = Logical False
+  Age = Real 0.0
 End
