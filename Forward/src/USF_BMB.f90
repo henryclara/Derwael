@@ -58,12 +58,14 @@ FUNCTION GetBMB ( Model, nodenumber, BMBMultiplier) RESULT(BMBOut)
    IF (.NOT.GotIt) THEN
       CALL FATAL('USF BMB', 'No rho specified in sif file.')
    END IF
+        
+    BMBOut = 0.5*Tanh(DistanceVal(DistancePerm(nodenumber))/100.0)
 
-   if ( Time >= 50.0 ) then
-       BMBOut = 0.02*(DepthVal(DepthPerm(nodenumber))**alpha)*Tanh(DistanceVal(DistancePerm(nodenumber))/100.0)
-   else
-       BMBOut = 0.0
-   end if
+   !if ( Time >= 50.0 ) then
+   !    BMBOut = 0.02*(DepthVal(DepthPerm(nodenumber))**alpha)*Tanh(DistanceVal(DistancePerm(nodenumber))/100.0)
+   !else
+   !    BMBOut = 0.0
+   !end if
 
    !if ( (Time >= 50.0) .AND. (DistanceVal(DistancePerm(nodenumber)) > 250.0) ) then
    !    BMBOut = DepthVal(DepthPerm(nodenumber))**alpha*(((10.0*DistanceVal(DistancePerm(nodenumber)) - 2500.0)/(DistanceVal(DistancePerm(nodenumber))*DistanceVal(DistancePerm(nodenumber)))) + 0.02)
