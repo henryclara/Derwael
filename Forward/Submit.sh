@@ -24,19 +24,7 @@ cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolve
 echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
 
-#YearCounter=$1
-#YearCounterFormatted=$(printf %06d $YearCounter)
-#sed -i "s/FORMAT/${YearCounterFormatted}/g" Forward.sif
-#echo YearCounter is: 
 make compile
 make ini
 make grid
 srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
-#if [ "${YearCounter}" -lt "1000" ]; then
-#	if [ "1" -eq 1 ]; then
-#					cp Mesh/*result* /work/bm1164/m300832/CodeThatWorks/SyntheticExperiments//Tolerance6/Forward/Mesh/
-#					cp Mesh/mesh* /work/bm1164/m300832/CodeThatWorks/SyntheticExperiments//Tolerance6/Forward/Mesh/
-#					cd /work/bm1164/m300832/CodeThatWorks/SyntheticExperiments//Tolerance6/Forward
-#					sbatch Submit.sh $YearCounter
-#	fi
-#fi
