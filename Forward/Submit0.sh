@@ -23,7 +23,7 @@ source ModulesPlusPathsMistralGCC71.sh
 cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolver.so
 echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
-cp ../Init/Mesh/*result* Mesh/
+cp ../../../Init/Mesh/*result* Mesh/
 YearCounter=$1
         YearCounterFormatted=$(printf %06d $YearCounter)
         YearCounter=$(($YearCounter+1))
