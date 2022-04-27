@@ -41,19 +41,19 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 1000
+  Timestep Intervals = 2
   Output Intervals = 1
-  Timestep Sizes = 0.01
+  Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
   Steady State Min Iterations = 1
 
-	Restart File="BMB000000.result"
+	Restart File="Forward000004.result"
 	!Restart File="../../Init/Mesh/InitVel000000.result"
 	Restart Before Initial Conditions = Logical True
 	!Specify name of result file. Used for restarts!!
-  Output File = "BMB000000.result"
+  Output File = "Forward000005.result"
   max output level = 30
 End
 
@@ -492,7 +492,7 @@ Solver 16
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
   Save Geometry Ids = Logical True ! add this line if you want to access boundaries in Paraview
-  Output File Name = File "Forward000000"
+  Output File Name = File "Forward000005"
   Output Format = String vtu
 End
 

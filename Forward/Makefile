@@ -39,9 +39,9 @@ clean:
 	rm -fr results/*
 
 ini:
-	echo Init.sif > ELMERSOLVER_STARTINFO
+	echo Forward.sif > ELMERSOLVER_STARTINFO
 
 .f90:
-	elmerf90  -o Init.sif 10 8 1 80 Mistral $<
+	elmerf90  -o Forward.sif 10 8 1 80 Mistral $<
 .c:
-	gcc  -o Init.sif 10 8 1 80 Mistral $< -lm
+	gcc  -o Forward.sif 10 8 1 80 Mistral $< -lm

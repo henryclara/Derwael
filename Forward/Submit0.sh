@@ -23,10 +23,8 @@ source ModulesPlusPathsMistralGCC71.sh
 cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolver.so
 echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
-
+cp ../Init/Mesh/*result* Mesh/
 YearCounter=$1
-echo YearCounter is: $YearCounter
-if [ "${YearCounter}" -lt "10" ]; then
         YearCounterFormatted=$(printf %06d $YearCounter)
         YearCounter=$(($YearCounter+1))
         YearCounterFormattedNew=$(printf %06d $YearCounter)
@@ -38,12 +36,7 @@ if [ "${YearCounter}" -lt "10" ]; then
         make ini 
         make grid
 srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi
-#        mv Mesh Output${YearCounterFormattedNew}
-#        mkdir -p Mesh
-#        cp Output${YearCounterFormattedNew}/mesh* Mesh/
-#        cp Output${YearCounterFormattedNew}/Forward${YearCounterFormattedNew}*.result*           Mesh
-        sbatch Submit.sh $YearCounter
-fi
+        sbatch Submit.sh 0
 
 
 
