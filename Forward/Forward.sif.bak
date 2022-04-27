@@ -289,7 +289,8 @@ Solver 6
 
   Exported Variable 2 = -dofs 1 "dSdt"
   Exported Variable 3 = -dofs 1 "dS"
-  Exported Variable 7 = -dofs 1 "FluxInit"
+  Exported Variable 4 = -dofs 1 "FluxInit"
+  Exported Variable 5 = -dofs 1 "Time"
   Flow Model = String "Stokes"
 End
 
@@ -462,7 +463,6 @@ End
 Solver 14
   Procedure = "SaveData" "SaveMaterials"
   Parameter 1 = String "Sea Level"
-  Variable 1 = String "Time"
 End
 
 Solver 15
