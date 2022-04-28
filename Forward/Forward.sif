@@ -41,19 +41,19 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 2
-  Output Intervals = 1
+  Timestep Intervals = 25
+  Output Intervals = 25
   Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
   Steady State Min Iterations = 1
 
-	Restart File="Forward000000.result"
+	Restart File="ForwardSTART.result"
 	!Restart File="../../Init/Mesh/InitVel000000.result"
 	Restart Before Initial Conditions = Logical True
 	!Specify name of result file. Used for restarts!!
-  Output File = "Forward000001.result"
+  Output File = "ForwardEND.result"
   max output level = 30
 End
 
@@ -119,8 +119,8 @@ End
 Body Force 2
    Zs Accumulation Flux 1 = Real 0.0e0
    Zs Accumulation Flux 2 = Real 0.0e0 !m/a
-   !Zs Accumulation Flux 3 = Real 1.3
-   Zs Accumulation Flux 3 = Equals smb
+   Zs Accumulation Flux 3 = Real 1.3
+   !Zs Accumulation Flux 3 = Equals smb
 End
 
 !! no melting/accretion under ice/shelf
@@ -170,9 +170,7 @@ Solver 1
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael2.nc"
-  ! netcdf file with smoothed data 
-  !Filename = File "SMB_Derwael_Smoothed.nc"
+  Filename = File "Derwael.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
@@ -198,7 +196,7 @@ Solver 1
 End
 
 Solver 2
-  !Exec Solver = Never
+  Exec Solver = Never
   Exec Solver = Before All
   Equation = ReaderSMB
   Procedure = "GridDataReader" "GridDataReader"
@@ -273,7 +271,7 @@ Solver 6
   Linear System Direct Method = "Mumps"
 	Mumps percentage increase working space = Integer 1600
 
-  Nonlinear System Max Iterations = 50
+  Nonlinear System Max Iterations = 20
   Nonlinear System Convergence Tolerance  = 1.0e-6
   Nonlinear System Newton After Iterations = 50
   Nonlinear System Newton After Tolerance = 1.0e-05
@@ -290,7 +288,7 @@ Solver 6
   Exported Variable 2 = -dofs 1 "dSdt"
   Exported Variable 3 = -dofs 1 "dS"
   Exported Variable 4 = -dofs 1 "FluxInit"
-  Exported Variable 5 = -dofs 1 "Time"
+  !Exported Variable 5 = -dofs 1 Time
   Flow Model = String "Stokes"
 End
 
@@ -467,6 +465,14 @@ End
 
 Solver 15
   Exec Solver = Never
+  Equation = "SaveScalars"
+  Procedure = File "SaveData" "SaveScalars"
+  Variable 1 = Time
+  Filename = File "Time.dat"
+End
+
+Solver 16
+  Exec Solver = Never
   Equation = "Age Equation"
 
   Variable = String "Age"
@@ -488,16 +494,16 @@ Solver 15
   Exported Variable 1 = -dofs 1 "age"
 End
 
-Solver 16
+Solver 17
   Exec Solver = After Saving
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
   Save Geometry Ids = Logical True ! add this line if you want to access boundaries in Paraview
-  Output File Name = File "Forward000001"
+  Output File Name = File "ForwardEND"
   Output Format = String vtu
 End
 
-Solver 17
+Solver 18
   Equation = "Flowdepth"
    Exec Solver = "Never"
    Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
@@ -528,7 +534,7 @@ End
 !---------------------------------------------------
 
 Equation 1
-  Active Solvers (12) = 1 2 3 4 6 7 8 12 14 15 16 17
+  Active Solvers (13) = 1 2 3 4 6 7 8 12 14 15 16 17 18
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
@@ -563,8 +569,9 @@ End
 Boundary Condition 2
   Name = "left"
   Target Boundaries = 1
-
-  Velocity 1 = Real 0.0
+  
+  !Velocity 1 = Real 0.0
+  Velocity 1 = Equals vx
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
@@ -585,7 +592,8 @@ Boundary Condition 4
   Name = "right"
   Target Boundaries = 3
 
-  Velocity 1 = Real 0.0
+  !Velocity 1 = Real 0.0
+  Velocity 1 = Equals vx
 End
 
 Boundary Condition 5
