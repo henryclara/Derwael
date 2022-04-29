@@ -29,6 +29,7 @@ submit: ini
 
 compile:  
 	elmerf90 src/AgeSolverRD.f90 -o src/AgeSolverRD
+	elmerf90 src/AgeSolver.f90 -o src/AgeSolver
 	elmerf90 src/DistanceSolveRD.f90 -o src/DistanceSolveRD
 	elmerf90 src/BedrockBump.f90 -o src/BedrockBump
 	elmerf90 src/GroundedMaskSolver.f90 -o src/GroundedMaskSolver
