@@ -38,19 +38,8 @@ if [ "${YearCounter}" -lt "10" ]; then
         make ini 
         make grid
 srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi
-#        mv Mesh Output${YearCounterFormattedNew}
-#        mkdir -p Mesh
-#        cp Output${YearCounterFormattedNew}/mesh* Mesh/
-#        cp Output${YearCounterFormattedNew}/Forward${YearCounterFormattedNew}*.result*           Mesh
         sbatch Submit.sh $YearCounter
 fi
 
+rename 's/_t//;' *pvtu
 
-
-
-
-
-#make compile
-#make ini
-#make grid
-#srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
