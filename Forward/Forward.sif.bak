@@ -42,7 +42,7 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 25
-  Output Intervals = 25
+  Output Intervals = 1
   Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
@@ -94,7 +94,7 @@ End
 
 !! for ice
 Initial Condition 1
-  Age = Real 0.0
+!  Age = Real 0.0
 End
 
 !! for top free surface
@@ -288,6 +288,8 @@ Solver 6
   Exported Variable 2 = -dofs 1 "dSdt"
   Exported Variable 3 = -dofs 1 "dS"
   Exported Variable 4 = -dofs 1 "FluxInit"
+  Exported Varibale 5 = -dofs 1 "Mesh Velocity"
+  Exported Variable 6 = -dofs 1 "Mesh Change"
   !Exported Variable 5 = -dofs 1 Time
   Flow Model = String "Stokes"
 End
@@ -472,7 +474,7 @@ Solver 15
 End
 
 Solver 16
-  Exec Solver = Never
+  !Exec Solver = Never
   Equation = "Age Equation"
 
   Variable = String "Age"
