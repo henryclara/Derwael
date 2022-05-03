@@ -41,8 +41,8 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 25
-  Output Intervals = 1
+  Timestep Intervals = 20
+  Output Intervals = 2
   Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
@@ -119,15 +119,16 @@ End
 Body Force 2
    Zs Accumulation Flux 1 = Real 0.0e0
    Zs Accumulation Flux 2 = Real 0.0e0 !m/a
-   Zs Accumulation Flux 3 = Real 1.3
-   !Zs Accumulation Flux 3 = Equals smb
+   !Zs Accumulation Flux 3 = Real 1.3
+   Zs Accumulation Flux 3 = Equals smb
 End
 
 !! no melting/accretion under ice/shelf
 Body Force 3
-  !Zb Accumulation = Real 0.0
-  Zb Accumulation = Variable Time
-    Real Procedure "src/USF_BMB" "GetBMB"
+  Zb Accumulation = Real 0.0
+  !Zb Accumulation = Equals bmb
+  !Zb Accumulation = Variable Time
+  !  Real Procedure "src/USF_BMB" "GetBMB"
 End
 
 !---------------------------------------------------
@@ -196,8 +197,8 @@ Solver 1
 End
 
 Solver 2
-  Exec Solver = Never
-  Exec Solver = Before All
+  !Exec Solver = Never
+  !Exec Solver = Before All
   Equation = ReaderSMB
   Procedure = "GridDataReader" "GridDataReader"
 
@@ -227,6 +228,37 @@ Solver 2
 End
 
 Solver 3
+  !Exec Solver = Never
+  Exec Solver = Before All 
+  Equation = ReaderBMB
+  Procedure = "GridDataReader" "GridDataReader"
+
+  !---- NOTE: File is case sensitive, String is not!
+  Filename = File "Derwael_BMB.nc"
+  !Time Dim Name = String "time"
+  X Dim Name = String "x" 
+  Y Dim Name = String "y" 
+
+  !Time Var Name = String "time"
+  X Var Name = String "x" 
+  Y Var Name = String "y" 
+
+  !--- Interpolation variables
+  X Epsilon  = Real 1.0e-2
+  Y Epsilon  = Real 1.0e-2
+  Time Epsilon  = Real 0.01
+
+  Interpolation Bias = Real 0.0 
+  Interpolation Multiplier = Real 1.0 
+
+  Is Time Counter = Logical True
+
+  Variable 1 = File bmb 
+
+  Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
+End
+
+Solver 4
   Exec Solver = Before Simulation
   Equation = "MapCoordinateInit"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
@@ -244,7 +276,7 @@ Solver 3
   Minimum Height = Real 1.0
 End
 
-Solver 4
+Solver 5
   !Exec Solver = Never
   Equation = "NormalVector"
   Procedure = "ElmerIceSolvers" "ComputeNormalSolver"
@@ -255,7 +287,7 @@ Solver 4
   Optimize Bandwidth = Logical False
 End
 
-Solver 5
+Solver 6
   !Exec Solver = Never
   Equation = Fw
   Procedure = "ElmerIceSolvers" "GetHydrostaticLoads"
@@ -263,7 +295,7 @@ Solver 5
   Variable DOFs = 3
 End
 
-Solver 6
+Solver 7
   !Exec Solver = Never
   Equation = "Navier-Stokes"
 	Optimize Bandwidth = Logical True
@@ -294,7 +326,7 @@ Solver 6
   Flow Model = String "Stokes"
 End
 
-Solver 7
+Solver 8
   Exec Solver = Never
   Equation = String "StressSolver"
   Procedure =  File "ElmerIceSolvers" "ComputeDevStress"
@@ -318,7 +350,7 @@ Solver 7
    Linear System Residual Output = 1
 End
 
-Solver 8
+Solver 9
   !Exec Solver = Never
   Equation = "HeightDepth"
   Procedure = "StructuredProjectToPlane" "StructuredProjectToPlane"
@@ -330,7 +362,7 @@ Solver 8
   Operator 3 = Bottom
 End
 
-Solver 9
+Solver 10
    !Exec Solver = Never
    Equation = "SolveDistance"
 
@@ -359,7 +391,7 @@ Solver 9
 
 End
 
-Solver 10
+Solver 11
   !Exec Solver = Never
   Equation = "Free Surface Top"
   Procedure =  "./src/MyFreeSurfaceSolver" "FreeSurfaceSolver"
@@ -395,7 +427,7 @@ Solver 10
   Relaxation Factor = Real 1.0
 End
 
-Solver 11
+Solver 12
   !Exec Solver = Never
   Equation = "Free Surface Sea/Shelf"
   Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
@@ -432,7 +464,7 @@ Solver 11
   Relaxation Factor = Real 1.0
 End
 
-Solver 12
+Solver 13
   Equation = "MapCoordinate"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
 
@@ -449,7 +481,7 @@ Solver 12
   Minimum Height = Real 1.0
 End
 
-Solver 13
+Solver 14
   !Exec Solver = Never
   Equation = GroundedMask
   Procedure = "ElmerIceSolvers" "GroundedSolver"
@@ -460,12 +492,12 @@ Solver 13
   Bedrock Variable = String "bedrock"
 End
 
-Solver 14
+Solver 15
   Procedure = "SaveData" "SaveMaterials"
   Parameter 1 = String "Sea Level"
 End
 
-Solver 15
+Solver 16
   Exec Solver = Never
   Equation = "SaveScalars"
   Procedure = File "SaveData" "SaveScalars"
@@ -473,8 +505,8 @@ Solver 15
   Filename = File "Time.dat"
 End
 
-Solver 16
-  ! Exec Solver   = "Never"!"Before All"
+Solver 17
+  Exec Solver   = "Never"!"Before All"
   Equation      = "Age Equation"
   Variable      = String "Age"
   Variable DOFs =  1
@@ -489,7 +521,7 @@ Solver 16
   Procedure = "./src/AgeSolver" "AgeSolver"
 End
 
-!Solver 16
+!Solver 18
 !  !Exec Solver = Never
 !  Equation = "Age Equation"
 !
@@ -512,7 +544,7 @@ End
 !  Exported Variable 1 = -dofs 1 "age"
 !End
 
-Solver 17
+Solver 18
   Exec Solver = After Saving
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
@@ -521,7 +553,7 @@ Solver 17
   Output Format = String vtu
 End
 
-Solver 18
+Solver 19
   Equation = "Flowdepth"
    Exec Solver = "Never"
    Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
@@ -552,19 +584,19 @@ End
 !---------------------------------------------------
 
 Equation 1
-  Active Solvers (13) = 1 2 3 4 6 7 8 12 14 15 16 17 18
+  Active Solvers (14) = 1 2 3 4 5 7 8 9 13 15 16 17 18 19
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
 
 Equation 2
-  Active Solvers(1) = 10
+  Active Solvers(1) = 11
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
 
 Equation 3
-  Active Solvers(4) = 5 9 11 13
+  Active Solvers(4) = 6 10 12 14
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
