@@ -9,7 +9,9 @@ check keywords warn
 $yearinsec = 365.25*24*60*60
 $rhoi = 900.0/(1.0e6*yearinsec^2)
 $rhow = 1000.0/(1.0e6*yearinsec^2)
-$A = 4.6e-25*yearinsec*1.0e18
+$A = 1.0e-26*yearinsec*1.0e18
+!$A = 4.6e-25*yearinsec*1.0e18
+!$A = 1.3e-32*yearinsec*1.0e18 ! From Reinhard's Derwael paper code. Ice rise increases too much in size as a result
 $n = 3.0
 $eta = 1.0/(2.0*A)^(1.0/n)
 $gravity = -9.8*yearinsec^2
@@ -41,9 +43,9 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 20
+  Timestep Intervals = 2
   Output Intervals = 2
-  Timestep Sizes = 0.5
+  Timestep Sizes = 0.1
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -51,7 +53,7 @@ Simulation
 
 	Restart File="ForwardSTART.result"
 	!Restart File="../../Init/Mesh/InitVel000000.result"
-	Restart Before Initial Conditions = Logical False
+	Restart Before Initial Conditions = Logical True 
 	!Specify name of result file. Used for restarts!!
   Output File = "ForwardEND.result"
   max output level = 30
@@ -125,8 +127,8 @@ End
 
 !! no melting/accretion under ice/shelf
 Body Force 3
-  Zb Accumulation = Real 0.0
-  !Zb Accumulation = Equals bmb
+  !Zb Accumulation = Real 0.0
+  Zb Accumulation = Equals bmb
   !Zb Accumulation = Variable Time
   !  Real Procedure "src/USF_BMB" "GetBMB"
 End
@@ -192,6 +194,8 @@ Solver 1
 
   Variable 1 = File vx
   Variable 2 = File vy
+  Variable 3 = File zs
+  Variable 4 = File zb
 
   Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
 End
@@ -234,7 +238,7 @@ Solver 3
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael_BMB.nc"
+  Filename = File "Derwael_BMB_Test.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x" 
   Y Dim Name = String "y" 
@@ -244,8 +248,8 @@ Solver 3
   Y Var Name = String "y" 
 
   !--- Interpolation variables
-  X Epsilon  = Real 1.0e-2
-  Y Epsilon  = Real 1.0e-2
+  X Epsilon  = Real 1.0e-5
+  Y Epsilon  = Real 1.0e-5
   Time Epsilon  = Real 0.01
 
   Interpolation Bias = Real 0.0 
@@ -613,7 +617,9 @@ Boundary Condition 1
 	Velocity 2 = Equals vy
 	!Velocity 1 = Variable FluxInit
 	!	Real Procedure "src/BedrockBump" "IceFluxAtBack"
-	Velocity 1 = Real 0.0
+	Velocity 1 = Equals vx
+  Zs = Equals zs
+  Zb = Equals zb
 End
 
 Boundary Condition 2
@@ -622,6 +628,9 @@ Boundary Condition 2
   
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
+  Velocity 2 = Equals vy
+  Zs = Equals zs
+  Zb = Equals zb
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
@@ -635,7 +644,6 @@ Boundary Condition 3
 
   Compute Sea Pressure = Logical True
   ComputeNormal = Logical False
-
 End
 
 Boundary Condition 4
@@ -644,6 +652,9 @@ Boundary Condition 4
 
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
+  Velocity 2 = Equals vy
+  Zs = Equals zs
+  Zb = Equals zb
 End
 
 Boundary Condition 5
