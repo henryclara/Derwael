@@ -25,25 +25,18 @@ echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
 cp ../../../Init/Mesh/*result* Mesh/
 YearCounter=$1
-        YearCounterFormatted=$(printf %06d $YearCounter)
-        YearCounter=$(($YearCounter+1))
-        YearCounterFormattedNew=$(printf %06d $YearCounter)
-        cp Forward.sif.bak Forward.sif
-        sed -i "s/START/${YearCounterFormatted}/g" Forward.sif
-        sed -i "s/END/${YearCounterFormattedNew}/g" Forward.sif
-        echo $YearCounter
-        make compile
-        make ini 
-        make grid
-srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi
-        sbatch Submit.sh 0
+YearCounterFormatted=$(printf %06d $YearCounter)
+# YearCounter=$(($YearCounter+1))
+YearCounterFormattedNew=$(printf %06d $YearCounter)
+cp Forward.sif.bak Forward.sif
+sed -i "s/START/${YearCounterFormatted}/g" Forward.sif
+sed -i "s/END/${YearCounterFormattedNew}/g" Forward.sif
+echo $YearCounter
+make compile
+make ini 
+make grid
+srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
 
+sbatch Submit.sh 0
 
-
-
-
-
-#make compile
-#make ini
-#make grid
 #srun -l --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
