@@ -12,5 +12,5 @@ cp -r {Forward.sif,Forward.sif.bak,Submit.sh,Submit0.sh,Derwael.nc,Derwael_SMB.n
 
 cd Simulations/${Name}
 
-sbatch Submit0.sh
+sbatch Submit0.sh 0
 
