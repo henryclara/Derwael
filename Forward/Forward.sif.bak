@@ -263,6 +263,38 @@ Solver 3
 End
 
 Solver 4
+  !Exec Solver = Never
+  Exec Solver = Before All 
+  Equation = ReaderSurfTemp
+  Procedure = "GridDataReader" "GridDataReader"
+
+  !---- NOTE: File is case sensitive, String is not!
+  Filename = File "Derwael_SurfTemp.nc"
+  !Time Dim Name = String "time"
+  X Dim Name = String "x" 
+  Y Dim Name = String "y" 
+
+  !Time Var Name = String "time"
+  X Var Name = String "x" 
+  Y Var Name = String "y" 
+
+  !--- Interpolation variables
+  X Epsilon  = Real 1.0e-5
+  Y Epsilon  = Real 1.0e-5
+  Time Epsilon  = Real 0.01
+
+  Interpolation Bias = Real 0.0 
+  Interpolation Multiplier = Real 1.0 
+
+  Is Time Counter = Logical True
+
+  Variable 1 = File temp
+
+  Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
+End
+
+
+Solver 5
   Exec Solver = Before Simulation
   Equation = "MapCoordinateInit"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
@@ -280,7 +312,7 @@ Solver 4
   Minimum Height = Real 1.0
 End
 
-Solver 5
+Solver 6
   !Exec Solver = Never
   Equation = "NormalVector"
   Procedure = "ElmerIceSolvers" "ComputeNormalSolver"
@@ -291,7 +323,7 @@ Solver 5
   Optimize Bandwidth = Logical False
 End
 
-Solver 6
+Solver 7
   !Exec Solver = Never
   Equation = Fw
   Procedure = "ElmerIceSolvers" "GetHydrostaticLoads"
@@ -299,7 +331,7 @@ Solver 6
   Variable DOFs = 3
 End
 
-Solver 7
+Solver 8
   !Exec Solver = Never
   Equation = "Navier-Stokes"
 	Optimize Bandwidth = Logical True
@@ -330,7 +362,7 @@ Solver 7
   Flow Model = String "Stokes"
 End
 
-Solver 8
+Solver 9
   Exec Solver = Never
   Equation = String "StressSolver"
   Procedure =  File "ElmerIceSolvers" "ComputeDevStress"
@@ -354,7 +386,7 @@ Solver 8
    Linear System Residual Output = 1
 End
 
-Solver 9
+Solver 10
   !Exec Solver = Never
   Equation = "HeightDepth"
   Procedure = "StructuredProjectToPlane" "StructuredProjectToPlane"
@@ -366,7 +398,7 @@ Solver 9
   Operator 3 = Bottom
 End
 
-Solver 10
+Solver 11
    !Exec Solver = Never
    Equation = "SolveDistance"
 
@@ -395,8 +427,8 @@ Solver 10
 
 End
 
-Solver 11
-  !Exec Solver = Never
+Solver 12
+  Exec Solver = Never
   Equation = "Free Surface Top"
   Procedure =  "./src/MyFreeSurfaceSolver" "FreeSurfaceSolver"
   !Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
@@ -431,8 +463,8 @@ Solver 11
   Relaxation Factor = Real 1.0
 End
 
-Solver 12
-  !Exec Solver = Never
+Solver 13
+  Exec Solver = Never
   Equation = "Free Surface Sea/Shelf"
   Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
   Variable = "Zb"
@@ -468,7 +500,7 @@ Solver 12
   Relaxation Factor = Real 1.0
 End
 
-Solver 13
+Solver 14
   Equation = "MapCoordinate"
   Procedure = "StructuredMeshMapper" "StructuredMeshMapper"
 
@@ -485,7 +517,7 @@ Solver 13
   Minimum Height = Real 1.0
 End
 
-Solver 14
+Solver 15
   !Exec Solver = Never
   Equation = GroundedMask
   Procedure = "ElmerIceSolvers" "GroundedSolver"
@@ -496,12 +528,12 @@ Solver 14
   Bedrock Variable = String "bedrock"
 End
 
-Solver 15
+Solver 16
   Procedure = "SaveData" "SaveMaterials"
   Parameter 1 = String "Sea Level"
 End
 
-Solver 16
+Solver 17
   Exec Solver = Never
   Equation = "SaveScalars"
   Procedure = File "SaveData" "SaveScalars"
@@ -509,7 +541,7 @@ Solver 16
   Filename = File "Time.dat"
 End
 
-Solver 17
+Solver 18
   Exec Solver   = "Never"!"Before All"
   Equation      = "Age Equation"
   Variable      = String "Age"
@@ -548,7 +580,7 @@ End
 !  Exported Variable 1 = -dofs 1 "age"
 !End
 
-Solver 18
+Solver 19
   Exec Solver = After Saving
   Equation = "result output"
   Procedure = "ResultOutputSolve" "ResultOutputSolver"
@@ -557,7 +589,7 @@ Solver 18
   Output Format = String vtu
 End
 
-Solver 19
+Solver 20
   Equation = "Flowdepth"
    Exec Solver = "Never"
    Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
@@ -588,19 +620,19 @@ End
 !---------------------------------------------------
 
 Equation 1
-  Active Solvers (14) = 1 2 3 4 5 7 8 9 13 15 16 17 18 19
+  Active Solvers (15) = 1 2 3 4 5 6 8 9 10 14 16 17 18 19 20
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
 
 Equation 2
-  Active Solvers(1) = 11
+  Active Solvers(1) = 12
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
 
 Equation 3
-  Active Solvers(4) = 6 10 12 14
+  Active Solvers(4) = 7 11 13 15
   Flow Solution Name = String "Flow Solution"
   Convection = String Computed
 End
