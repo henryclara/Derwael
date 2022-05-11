@@ -717,4 +717,5 @@ Boundary Condition 6
   ComputeNormal = Logical False
   Age = Real 0.0
   Temp = Equals tsurf
+  !Temp = Real 258.15
 End
