@@ -65,10 +65,9 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-
   Timestep Intervals = 50
   Output Intervals = 1
-  Timestep Sizes = 0.1
+  Timestep Sizes = 0.05
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -493,7 +492,7 @@ Solver 11
 End
 
 Solver 12
-  Exec Solver = Never
+  !Exec Solver = Never
   Equation = "Free Surface Top"
   Procedure =  "./src/MyFreeSurfaceSolver" "FreeSurfaceSolver"
   !Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
@@ -529,7 +528,7 @@ Solver 12
 End
 
 Solver 13
-  Exec Solver = Never
+  !Exec Solver = Never
   Equation = "Free Surface Sea/Shelf"
   Procedure =  "FreeSurfaceSolver" "FreeSurfaceSolver"
   Variable = "Zb"
@@ -848,7 +847,7 @@ Boundary Condition 5
          Real MATC "pressuremeltingpoint(tx)"
         !Temp = Real 200.15
         Temp Condition = Variable GroundedMask
-		Real MATC "(tx-0.5)*(-1)"
+		Real MATC "(tx+0.5)*(-1)"
   ! geothermal heatflux !-------------------
         Temp Flux BC = Logical True
   Temp Heat Flux = Variable GroundedMask
