@@ -65,9 +65,10 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 20
+
+  Timestep Intervals = 50
   Output Intervals = 1
-  Timestep Sizes = 0.5
+  Timestep Sizes = 0.1
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -119,7 +120,7 @@ End
 !! for ice
 Initial Condition 1
   Age = Real 0.0
-  !Temp = Real 258.15  ! Not sure if this is needed here?
+  !Temp = Real 258.15  ! This causes NaN values in the SLURM out files
 End
 
 !! for top free surface
@@ -138,17 +139,18 @@ Body Force 1
   Flow BodyForce 1 = Real 0.0
   Flow BodyForce 2 = Real 0.0
   Flow BodyForce 3 = Real $gravity
+  Friction Heat = Logical True !This keyword actually means strain heating
 End
 
 !! accumulation flux in m/year
 Body Force 2
+   TSurf = Equals tsurf
    Zs Accumulation Flux 1 = Real 0.0e0
    Zs Accumulation Flux 2 = Real 0.0e0 !m/a
    !Zs Accumulation Flux 3 = Real 1.3
    Zs Accumulation Flux 3 = Equals smb
 End
 
-!! no melting/accretion under ice/shelf
 Body Force 3
   !Zb Accumulation = Real 0.0
   Zb Accumulation = Equals bmb
@@ -162,18 +164,41 @@ End
 
 !! ice material properties in MPa - m - a system
 Material 1
-  Viscosity Model = String "power law"
-  Density = Real $rhoi
-  Viscosity = Real $eta
-  Viscosity Exponent = Real $1.0/n
-  Critical Shear Rate = Real 1.0e-15
+  !Viscosity Model = String "power law"
+  !Density = Real $rhoi
+  !Viscosity = Real $eta
+  !Viscosity Exponent = Real $1.0/n
+  !Critical Shear Rate = Real 1.0e-15
   Sea level = Real 0.0
-  Glen Enhancement Factor = Real 1.0
+  !Glen Enhancement Factor = Real 1.0
 ! the temperature to switch between the
 ! two regimes in the flow law
-  Limit Temperature = Real -10.0
+  !Limit Temperature = Real -10.0
 ! In case there is no temperature variable
-  Constant Temperature = Real -15.0
+  !Constant Temperature = Real -15.0
+  Density = Real $rhoi
+
+  !----------------
+  ! vicosity stuff
+  !----------------
+  Viscosity Model = String "Glen"
+  ! Viscosity has to be set to a dummy value
+  ! to avoid warning output from Elmer
+  Viscosity = Real 1.0
+  Glen Exponent = Real 3.0
+  Critical Shear Rate = Real 1.0e-10
+  ! Rate factors (Paterson value in MPa^-3a^-1)
+  Rate Factor 1 = Real 1.258e13
+  Rate Factor 2 = Real 6.046e28
+  ! these are in SI units - no problem, as long as
+  ! the gas constant also is
+  Activation Energy 1 = Real 60e3
+  Activation Energy 2 = Real 139e3
+  Glen Enhancement Factor = Real 0.25
+  ! the variable taken to evaluate the Arrhenius law
+  ! in general this should be the temperature relative
+  ! to pressure melting point. The suggestion below plugs
+  ! in the correct value obtained with TemperateIceSolver
 
   Min Zs = Variable "Bottom Zb"
     Real MATC "tx + 10.0"
@@ -187,7 +212,7 @@ Material 1
   Temperature Field Variable = String "Temp Homologous"
   ! the temperature to switch between the
   ! two regimes in the flow law
-  Limit Temperature = Real -10.0
+  Limit Temperature = Real -10.0  ! Inconsistency here: why is this in Celsius?
   ! In case there is no temperature variable (which here is the case)
   !Constant Temperature = Real -10.0
   ! Heat transfer stuff (will come later)
@@ -196,9 +221,10 @@ Material 1
 
   Temp Heat Conductivity = Variable Temp
     Real MATC "conductivity(tx)*31556926.0*1.0E-06"
-
-  Temp Upper Limit = Variable Depth
-       Real MATC "273.15 - 9.8E-08 * tx * 910.0 * 9.81" !-> this is the correction of the presure melting point with respect to the hydrostatic overburden at the point
+     Temp Upper Limit = Variable Pressure
+         Real MATC "pressuremeltingpoint(tx)"
+  !Temp Upper Limit = Variable Depth
+  !     Real MATC "273.15 - 9.8E-08 * tx * 910.0 * 9.81" !-> this is the correction of the presure melting point with respect to the hydrostatic overburden at the point
 End
 
 !---------------------------------------------------
@@ -620,12 +646,13 @@ End
 !End
 
 Solver 19
+  !Exec Solver = Never
   Equation = String "Homologous Temperature Equation"
   Procedure =  File "ElmerIceSolvers" "TemperateIceSolver"
   ! Comment next line in parallel, as EliminateDirichlet does
   ! not work in parallel
   !------------------------------------------------------------
-  Before Linsolve = "EliminateDirichlet" "EliminateDirichlet"
+  !Before Linsolve = "EliminateDirichlet" "EliminateDirichlet"
   Variable = String "Temp"
   Variable DOFs = 1
   Linear System Solver = "Iterative"
@@ -821,12 +848,13 @@ Boundary Condition 5
          Real MATC "pressuremeltingpoint(tx)"
         !Temp = Real 200.15
         Temp Condition = Variable GroundedMask
-                Real MATC "(tx-0.5)*(-1)"
+		Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
         Temp Flux BC = Logical True
-  Temp Heat Flux = Real 50.0
-  !Temp Heat Flux = Variable GroundedMask, GHF
-  !              Real MATC "if (tx(0)> 0.0) {tx(1)*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
+  Temp Heat Flux = Variable GroundedMask
+	Real MATC "if (tx(0)> 0.0) {50.0} else {0.0}"
+  !Temp Heat Flux = Variable GroundedMask
+  !              Real MATC "if (tx(0)> 0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
 
 End
 

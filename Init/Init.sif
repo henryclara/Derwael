@@ -167,20 +167,20 @@ End
 
 !! ice material properties in MPa - m - a system
 Material 1
-  Viscosity Model = String "power law"
-  Density = Real $rhoi
-  Viscosity = Real $eta
-  Viscosity Exponent = Real $1.0/n
-  Critical Shear Rate = Real 1.0e-15
+  !Viscosity Model = String "power law"
+  !Density = Real $rhoi
+  !Viscosity = Real $eta
+  !Viscosity Exponent = Real $1.0/n
+  !Critical Shear Rate = Real 1.0e-15
 
   Sea level = Real 0.0
 
-  Glen Enhancement Factor = Real 1.0
+  !Glen Enhancement Factor = Real 1.0
 ! the temperature to switch between the
 ! two regimes in the flow law
-  Limit Temperature = Real -10.0
+  !Limit Temperature = Real -10.0
 ! In case there is no temperature variable
-  Constant Temperature = Real -15.0
+  !Constant Temperature = Real -15.0
 
   Min Zs = Variable "Bottom Zb"
     Real MATC "tx + 10.0"
@@ -190,7 +190,20 @@ Material 1
   Min Zb = Equals bedrock
   Max Zb = Real 1.0e6
   !Cauchy = Logical True
-
+  Viscosity Model = String "Glen"
+  ! Viscosity has to be set to a dummy value
+  ! to avoid warning output from Elmer
+  Viscosity = Real 1.0 
+  Glen Exponent = Real 3.0 
+  Critical Shear Rate = Real 1.0e-10
+  ! Rate factors (Paterson value in MPa^-3a^-1)
+  Rate Factor 1 = Real 1.258e13
+  Rate Factor 2 = Real 6.046e28
+  ! these are in SI units - no problem, as long as
+  ! the gas constant also is
+  Activation Energy 1 = Real 60e3
+  Activation Energy 2 = Real 139e3
+  Glen Enhancement Factor = Real 0.25
   Temperature Field Variable = String "Temp Homologous"
   ! the temperature to switch between the
   ! two regimes in the flow law
@@ -536,7 +549,7 @@ Solver 15
   ! Comment next line in parallel, as EliminateDirichlet does
   ! not work in parallel
   !------------------------------------------------------------
-  Before Linsolve = "EliminateDirichlet" "EliminateDirichlet"
+  !Before Linsolve = "EliminateDirichlet" "EliminateDirichlet"
   Variable = String "Temp"
   Variable DOFs = 1
   Linear System Solver = "Iterative"
@@ -702,10 +715,8 @@ Boundary Condition 5
                 Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
         Temp Flux BC = Logical True
-  Temp Heat Flux = Real 50.0
-  !Temp Heat Flux = Variable GroundedMask, GHF
-  !              Real MATC "if (tx(0)> 0.0) {tx(1)*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
-
+  Temp Heat Flux = Variable GroundedMask
+        Real MATC "if (tx(0) > 0.0) {50.0} else {0.0}"
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
