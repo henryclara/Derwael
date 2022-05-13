@@ -66,8 +66,8 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 50
-  Output Intervals = 1
-  Timestep Sizes = 0.05
+  Output Intervals = 10
+  Timestep Sizes = 0.1
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -645,7 +645,7 @@ End
 !End
 
 Solver 19
-  !Exec Solver = Never
+  Exec Solver = Never
   Equation = String "Homologous Temperature Equation"
   Procedure =  File "ElmerIceSolvers" "TemperateIceSolver"
   ! Comment next line in parallel, as EliminateDirichlet does
@@ -847,13 +847,13 @@ Boundary Condition 5
          Real MATC "pressuremeltingpoint(tx)"
         !Temp = Real 200.15
         Temp Condition = Variable GroundedMask
-		Real MATC "(tx+0.5)*(-1)"
+		Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
         Temp Flux BC = Logical True
   Temp Heat Flux = Variable GroundedMask
-	Real MATC "if (tx(0)> 0.0) {50.0} else {0.0}"
+	Real MATC "if (tx(0)>=0.0) {50.0} else {0.0}"
   !Temp Heat Flux = Variable GroundedMask
-  !              Real MATC "if (tx(0)> 0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
+  !              Real MATC "if (tx(0)>0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
 
 End
 
