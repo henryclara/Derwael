@@ -65,7 +65,7 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 50
+  Timestep Intervals = 40
   Output Intervals = 10
   Timestep Sizes = 0.1
 
@@ -222,8 +222,8 @@ Material 1
     Real MATC "conductivity(tx)*31556926.0*1.0E-06"
      Temp Upper Limit = Variable Pressure
          Real MATC "pressuremeltingpoint(tx)"
-  !Temp Upper Limit = Variable Depth
-  !     Real MATC "273.15 - 9.8E-08 * tx * 910.0 * 9.81" !-> this is the correction of the presure melting point with respect to the hydrostatic overburden at the point
+  Temp Upper Limit = Variable Depth
+       Real MATC "273.15 - 9.8E-08 * tx * 910.0 * 9.81" !-> this is the correction of the presure melting point with respect to the hydrostatic overburden at the point
 End
 
 !---------------------------------------------------
