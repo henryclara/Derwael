@@ -121,7 +121,6 @@ Initial Condition 1
   FluxInit = Real 90000 ! Dependency on this parameter should be checked and removed
   Bedrock = Equals bedrock
   Age = Real 0.0
-  Temp = Real 258.15
 End
 
 !! for top free surface
