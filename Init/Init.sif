@@ -121,6 +121,7 @@ Initial Condition 1
   FluxInit = Real 90000 ! Dependency on this parameter should be checked and removed
   Bedrock = Equals bedrock
   Age = Real 0.0
+  Temp = Real 273.0
 End
 
 !! for top free surface
@@ -543,6 +544,7 @@ Solver 14
 End
 
 Solver 15
+  Exec Solver = Never
   Equation = String "Homologous Temperature Equation"
   Procedure =  File "ElmerIceSolvers" "TemperateIceSolver"
   ! Comment next line in parallel, as EliminateDirichlet does
