@@ -20,6 +20,9 @@ set -e
 
 source ModulesPlusPathsMistralGCC71.sh
 
+gmsh Mesh.geo -1 -2
+ElmerGrid 14 2 Mesh.msh -autoclean
+
 cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolver.so
 echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
