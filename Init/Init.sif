@@ -190,6 +190,7 @@ Material 1
   Min Zb = Equals bedrock
   Max Zb = Real 1.0e6
   !Cauchy = Logical True
+
   Viscosity Model = String "Glen"
   ! Viscosity has to be set to a dummy value
   ! to avoid warning output from Elmer
@@ -557,7 +558,7 @@ Solver 15
   Linear System Iterative Method = "BiCGStab"
   Linear System Max Iterations = 500
   Linear System Convergence Tolerance = 1.0E-07
-  Linear System Abort Not Converged = True
+  Linear System Abort Not Converged = False
   Linear System Preconditioning = "ILU0"
   Linear System Residual Output = 1
   Steady State Convergence Tolerance = 1.0E-04

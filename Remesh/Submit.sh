@@ -20,6 +20,7 @@ set -e
 
 source ModulesPlusPathsMistralGCC71.sh
 
+rm Mesh.msh
 gmsh Mesh.geo -1 -2
 ElmerGrid 14 2 Mesh.msh -autoclean
 

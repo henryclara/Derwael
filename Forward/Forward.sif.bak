@@ -67,7 +67,7 @@ Simulation
   BDF Order = 1
   Timestep Intervals = 20
   Output Intervals = 1
-  Timestep Sizes = 0.1
+  Timestep Sizes = 0.01
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -658,7 +658,7 @@ Solver 19
   Linear System Iterative Method = "BiCGStab"
   Linear System Max Iterations = 500
   Linear System Convergence Tolerance = 1.0E-07
-  Linear System Abort Not Converged = True
+  Linear System Abort Not Converged = False
   Linear System Preconditioning = "ILU0"
   Linear System Residual Output = 1
   Steady State Convergence Tolerance = 1.0E-04
