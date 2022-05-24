@@ -121,7 +121,10 @@ Initial Condition 1
   FluxInit = Real 90000 ! Dependency on this parameter should be checked and removed
   Bedrock = Equals bedrock
   Age = Real 0.0
-  Temp = Real 258.15
+  !Temp = Real 265.15
+  !Temp = Variable Height
+    !Real MATC "(tx(0)*pressuremeltingpoint(tx(0)+tx(1)))/(tx(0)+tx(1))+(tx(1)*Tsurf)/(tx(0)+tx(1))"
+  !  Real MATC "tx(0)"
 End
 
 !! for top free surface
@@ -142,7 +145,6 @@ Body Force 1
   Flow BodyForce 1 = Real 0.0
   Flow BodyForce 2 = Real 0.0
   Flow BodyForce 3 = Real $gravity
-  Temp Volume Source = Equals W ! The volumetric heat source
   Friction Heat = Logical True !This keyword actually means strain heating
 End
 
@@ -544,6 +546,7 @@ Solver 14
 End
 
 Solver 15
+  Exec Solver = Never
   Equation = String "Homologous Temperature Equation"
   Procedure =  File "ElmerIceSolvers" "TemperateIceSolver"
   ! Comment next line in parallel, as EliminateDirichlet does
@@ -567,6 +570,7 @@ Solver 15
   !-----------------------------------------------------
   Apply Dirichlet = Logical True
   Stabilize = True
+  Loop While Unconstrained Nodes = Logical True
   ! those two variables are needed in order to store
   ! the relative or homologous temperature as well
   ! as the residual
@@ -708,7 +712,7 @@ Boundary Condition 5
   Distance = Real 0.0
   Distance Condition = Variable GroundedMask
     Real MATC "tx"
-  Temp = Variable Pressure
+  Temp = Variable Depth
          Real MATC "pressuremeltingpoint(tx)"
         !Temp = Real 200.15
         Temp Condition = Variable GroundedMask
@@ -716,7 +720,7 @@ Boundary Condition 5
   ! geothermal heatflux !-------------------
         Temp Flux BC = Logical True
   Temp Heat Flux = Variable GroundedMask
-        Real MATC "if (tx(0) > 0.0) {50.0} else {0.0}"
+        Real MATC "if (tx(0) >= 0.0) {50.0*1E-03 * (31556926.0)*1.0E-06} else {0.0}"
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
