@@ -52,4 +52,4 @@ export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
 #make ini
 make grid
 #mpirun -n 80 ElmerSolver_mpi
-srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 128 ElmerSolver_mpi Remesh.sif
+srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 1 ElmerSolver_mpi Remesh.sif
