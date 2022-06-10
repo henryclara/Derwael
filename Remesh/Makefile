@@ -21,7 +21,7 @@ all: clean ini grid submit
 
 grid:
 	#ElmerGrid 2 2 Mesh -partition 10 8 1 -autoclean
-	ElmerGrid 2 2 Mesh -metis 80 4  -autoclean
+	#ElmerGrid 2 2 Mesh -metis 80 4  -autoclean
 
 submit: ini
 

@@ -60,7 +60,7 @@ End
 Simulation
   Coordinate System  = Cartesian 3D
   Simulation Type = transient
-  Extruded Mesh Levels = Integer 10
+  Extruded Mesh Levels = Integer 70
 
   Timestepping Method = "bdf"
   BDF Order = 1
@@ -69,8 +69,8 @@ Simulation
   Timestep Sizes = 0.01
 
   Initialize Dirichlet Conditions = Logical False
-  Steady State Max Iterations = 6
-  Steady State Min Iterations = 6
+  Steady State Max Iterations = 1
+  Steady State Min Iterations = 1
 
 	!Specify name of result file. Used for restarts!!
   Output File = "Forward000000.result"
@@ -342,14 +342,14 @@ Solver 6
 End
 
 Solver 7
-  Exec Solver = Never
+  !Exec Solver = Never
   Equation = "Navier-Stokes"
 	Optimize Bandwidth = Logical True
   Linear System Solver = Direct
   Linear System Direct Method = "Mumps"
 	Mumps percentage increase working space = Integer 1600
 
-  Nonlinear System Max Iterations = 50
+  Nonlinear System Max Iterations = 5
   Nonlinear System Convergence Tolerance  = 1.0e-5
   Nonlinear System Newton After Iterations = 50
   Nonlinear System Newton After Tolerance = 1.0e-05
