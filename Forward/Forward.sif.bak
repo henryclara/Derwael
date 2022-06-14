@@ -403,7 +403,7 @@ Solver 8
   Linear System Direct Method = "Mumps"
 	Mumps percentage increase working space = Integer 1600
 
-  Nonlinear System Max Iterations = 20
+  Nonlinear System Max Iterations = 50
   Nonlinear System Convergence Tolerance  = 1.0e-6
   Nonlinear System Newton After Iterations = 50
   Nonlinear System Newton After Tolerance = 1.0e-05
