@@ -67,7 +67,7 @@ Simulation
   BDF Order = 1
   Timestep Intervals = 20
   Output Intervals = 1
-  Timestep Sizes = 0.01
+  Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
