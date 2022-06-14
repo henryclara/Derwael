@@ -60,7 +60,7 @@ End
 Simulation
   Coordinate System  = Cartesian 3D
   Simulation Type = transient
-  Extruded Mesh Levels = Integer 20
+  Extruded Mesh Levels = Integer 10
 
   Timestepping Method = "bdf"
   BDF Order = 1
