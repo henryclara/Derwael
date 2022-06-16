@@ -9,6 +9,7 @@
 #SBATCH --ntasks=80
 #SBATCH --time=08:00:00
 #SBATCH --partition=compute
+#SBATCH --export=NONE
 #=================================================================================================================
 spack load intel-oneapi-mpi@2021.5.0%intel@2021.5.0
 #spack load intel-mpi@2019.10.317
@@ -41,7 +42,10 @@ echo $SLURM_JOB_NODELIST
 
 echo Here comes the partition the job runs in:
 echo $SLURM_JOB_PARTITION
+echo "Current directory: " $PWD
+echo "Going into slurm submit directory"
 cd $SLURM_SUBMIT_DIR
+echo "Current directory: " $PWD
 
 source ModulesPlusPaths2LoadIntelMPI.sh
 export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
@@ -54,6 +58,8 @@ YearCounter=$1
 YearCounterFormatted=$(printf %06d $YearCounter)
 # YearCounter=$(($YearCounter+1))
 YearCounterFormattedNew=$(printf %06d $YearCounter)
+echo "Current directory: " $PWD
+echo "Next step: copy For.sif.bak"
 cp Forward.sif.bak Forward.sif
 sed -i "s/START/${YearCounterFormatted}/g" Forward.sif
 sed -i "s/END/${YearCounterFormattedNew}/g" Forward.sif
@@ -62,5 +68,6 @@ make compile
 make ini
 make grid
 srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
-
+echo "Submitting job"
 sbatch Submit.sh 0
+echo "Job submitted"

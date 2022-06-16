@@ -9,6 +9,7 @@
 #SBATCH --ntasks=80
 #SBATCH --time=08:00:00
 #SBATCH --partition=compute
+#SBATCH --export=NONE
 #=================================================================================================================
 spack load intel-oneapi-mpi@2021.5.0%intel@2021.5.0
 #spack load intel-mpi@2019.10.317
@@ -41,14 +42,16 @@ echo $SLURM_JOB_NODELIST
 
 echo Here comes the partition the job runs in:
 echo $SLURM_JOB_PARTITION
+echo "Current directory:" $PWD
+echo "Going into slurm submit dir."
 cd $SLURM_SUBMIT_DIR
-
+echo "Current directory:" $PWD
 source ModulesPlusPaths2LoadIntelMPI.sh
 export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
 
 cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolver.so
-echo $ELMER_HOME
-echo $ELMER_SOLVER_HOME
+#echo $ELMER_HOME
+#echo $ELMER_SOLVER_HOME
 
 Counter=$1
 echo Counter is: $Counter
@@ -56,6 +59,8 @@ if [ "${Counter}" -lt "10" ]; then
         CounterFormatted=$(printf %06d $Counter)
         Counter=$(($Counter+1))
         CounterFormattedNew=$(printf %06d $Counter)
+	echo "Current directory:" $PWD
+	echo "Next step: copy For.sif.bak"
         cp Forward.sif.bak Forward.sif
         sed -i "s/START/${CounterFormatted}/g" Forward.sif
         sed -i "s/END/${CounterFormattedNew}/g" Forward.sif
@@ -64,6 +69,9 @@ if [ "${Counter}" -lt "10" ]; then
         make ini
         make grid
 	srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
+	echo "Done running Elmer"
+	echo "Submitting next job"
 	sbatch Submit.sh $Counter
+	echo "Job submitted"
 fi
 
