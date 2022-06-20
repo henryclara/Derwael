@@ -75,7 +75,7 @@ Simulation
 
 	Restart File="ForwardSTART.result"
 	!Restart File="../../Init/Mesh/InitVel000000.result"
-	Restart Before Initial Conditions = Logical True 
+	Restart Before Initial Conditions = Logical False 
 	!Specify name of result file. Used for restarts!!
   Output File = "ForwardEND.result"
   max output level = 30
