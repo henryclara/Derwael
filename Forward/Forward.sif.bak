@@ -843,11 +843,11 @@ Boundary Condition 5
     Real MATC "tx"
 
   ! Temperature
-  Temp = Variable Depth
-    Real MATC "pressuremeltingpoint(tx)"
-  !Temp = Real 200.15
-  Temp Condition = Variable GroundedMask
-    Real MATC "(tx-0.5)*(-1)"
+  !Temp = Variable Depth
+  !  Real MATC "pressuremeltingpoint(tx)"
+  Temp = Real 272.0
+  !Temp Condition = Variable GroundedMask
+  !  Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
   Temp Flux BC = Logical True
   Temp Heat Flux = Real 0.0
