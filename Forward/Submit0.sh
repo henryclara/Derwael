@@ -54,20 +54,20 @@ cp $ELMER_HOME/share/elmersolver/lib/FreeSurfaceSolver.so src/MyFreeSurfaceSolve
 echo $ELMER_HOME
 echo $ELMER_SOLVER_HOME
 cp ../../../Init/Mesh/*result* Mesh/
-YearCounter=$1
-YearCounterFormatted=$(printf %06d $YearCounter)
-# YearCounter=$(($YearCounter+1))
-YearCounterFormattedNew=$(printf %06d $YearCounter)
+Counter=$1
+CounterFormatted=$(printf %06d $Counter)
+Counter=$(($Counter+50))
+CounterFormattedNew=$(printf %06d $Counter)
 echo "Current directory: " $PWD
 echo "Next step: copy For.sif.bak"
 cp Forward.sif.bak Forward.sif
-sed -i "s/START/${YearCounterFormatted}/g" Forward.sif
-sed -i "s/END/${YearCounterFormattedNew}/g" Forward.sif
-echo $YearCounter
+sed -i "s/START/${CounterFormatted}/g" Forward.sif
+sed -i "s/END/${CounterFormattedNew}/g" Forward.sif
+echo $Counter
 make compile
 make ini
 make grid
 srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
 echo "Submitting job"
-sbatch Submit.sh 0
+sbatch Submit.sh 50
 echo "Job submitted"
