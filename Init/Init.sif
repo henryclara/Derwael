@@ -233,7 +233,7 @@ Solver 1
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael.nc"
+  Filename = File "DerwaelBCs.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
@@ -257,6 +257,8 @@ Solver 1
   Variable 3 = File "zb"
   Variable 4 = File "vx"
   Variable 5 = File "vy"
+  Variable 6 = File "zs0"
+  Variable 7 = File "zb0"
 
   Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
 End
@@ -669,7 +671,7 @@ Boundary Condition 5
 !
 ! Condition where the bed is stuck
 !
-  Zb = Equals zb
+  Zb = Equals zb0
   Zb Condition = Variable GroundedMask
     Real MATC "tx + 0.5"
 !
