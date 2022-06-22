@@ -75,7 +75,7 @@ Simulation
 
 	Restart File="ForwardSTART.result"
 	!Restart File="../../Init/Mesh/InitVel000000.result"
-	Restart Before Initial Conditions = Logical False 
+	Restart Before Initial Conditions = Logical True 
 	!Specify name of result file. Used for restarts!!
   Output File = "ForwardEND.result"
   max output level = 30
@@ -237,7 +237,7 @@ Solver 1
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael.nc"
+  Filename = File "DerwaelBCs.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
@@ -260,6 +260,8 @@ Solver 1
   Variable 2 = File vy
   Variable 3 = File zs
   Variable 4 = File zb
+  Variable 5 = File zs0
+  Variable 6 = File zb0
 
   Enable Scaling = Logical False ! Scales the Elmer grid to match the NetCDF grid
 End
@@ -751,8 +753,9 @@ Boundary Condition 1
 	!Velocity 1 = Variable FluxInit
 	!	Real Procedure "src/BedrockBump" "IceFluxAtBack"
 	Velocity 1 = Equals vx
-  Zs = Equals zs
-  Zb = Equals zb
+  Zs = Equals zs0
+  Zb = Equals zb0
+  Temp = Real 267.0
 End
 
 Boundary Condition 2
@@ -762,8 +765,8 @@ Boundary Condition 2
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
-  Zs = Equals zs
-  Zb = Equals zb
+  Zs = Equals zs0
+  Zb = Equals zb0
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
@@ -786,8 +789,8 @@ Boundary Condition 4
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
-  Zs = Equals zs
-  Zb = Equals zb
+  Zs = Equals zs0
+  Zb = Equals zb0
 End
 
 Boundary Condition 5
