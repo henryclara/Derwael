@@ -121,7 +121,8 @@ Initial Condition 1
   FluxInit = Real 90000 ! Dependency on this parameter should be checked and removed
   Bedrock = Equals bedrock
   Age = Real 0.0
-  Temp = Real 273.0
+  Temp = Variable Depth, Height, tsurf
+     Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
 End
 
 !! for top free surface
