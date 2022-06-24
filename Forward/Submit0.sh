@@ -56,7 +56,7 @@ echo $ELMER_SOLVER_HOME
 cp ../../../Init/Mesh/*result* Mesh/
 Counter=$1
 CounterFormatted=$(printf %06d $Counter)
-Counter=$(($Counter+50))
+Counter=$(($Counter+5))
 CounterFormattedNew=$(printf %06d $Counter)
 echo "Current directory: " $PWD
 echo "Next step: copy For.sif.bak"
@@ -69,5 +69,5 @@ make ini
 make grid
 srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Forward.sif
 echo "Submitting job"
-sbatch Submit.sh 50
+sbatch Submit.sh 5
 echo "Job submitted"

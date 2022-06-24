@@ -57,7 +57,7 @@ Counter=$1
 echo Counter is: $Counter
 if [ "${Counter}" -lt "1000" ]; then
         CounterFormatted=$(printf %06d $Counter)
-        Counter=$(($Counter+50))
+        Counter=$(($Counter+5))
         CounterFormattedNew=$(printf %06d $Counter)
 	echo "Current directory:" $PWD
 	echo "Next step: copy For.sif.bak"
