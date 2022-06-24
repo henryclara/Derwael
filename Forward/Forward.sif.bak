@@ -66,8 +66,8 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 100
-  Output Intervals = 50
-  Timestep Sizes = 0.5
+  Output Intervals = 1
+  Timestep Sizes = 0.05
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -120,6 +120,8 @@ End
 Initial Condition 1
   Age = Real 0.0
   !Temp = Real 258.15  ! This causes NaN values in the SLURM out files
+  Temp = Variable Depth, Height, tsurf
+    Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
 End
 
 !! for top free surface
@@ -647,7 +649,7 @@ End
 !End
 
 Solver 19
-  Exec Solver = Never
+  !Exec Solver = Never
   Equation = String "Homologous Temperature Equation"
   Procedure =  File "ElmerIceSolvers" "TemperateIceSolver"
   ! Comment next line in parallel, as EliminateDirichlet does
@@ -694,16 +696,16 @@ End
 
 Solver 21
   Equation = "Flowdepth"
-   Exec Solver = "Never"
-   Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
-   Variable = String "Depth"
-   Variable DOFs = 1
-   Linear System Solver = "Direct"
-   Linear System Direct Method = "UMFPACK"
-   ! this sets the direction
-   ! -1 is negative z-direction (upside down)
-   ! +1 is positive (downside up)
-   Gradient = Real -1.0E00
+  Exec Solver = "Never"
+  Procedure = File "ElmerIceSolvers" "FlowDepthSolver"
+  Variable = String "Depth"
+  Variable DOFs = 1
+  Linear System Solver = "Direct"
+  Linear System Direct Method = "UMFPACK"
+  ! this sets the direction
+  ! -1 is negative z-direction (upside down)
+  ! +1 is positive (downside up)
+  Gradient = Real -1.0E00
   ! switch that to True, if you want to have
   ! free surface gradients to be computed
   !------------------------------------
@@ -755,7 +757,9 @@ Boundary Condition 1
 	Velocity 1 = Equals vx
   Zs = Equals zs0
   Zb = Equals zb0
-  Temp = Real 267.0
+  Temp = Variable Depth, Height, tsurf
+    Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
+  !Temp = Real 267.0
 End
 
 Boundary Condition 2
