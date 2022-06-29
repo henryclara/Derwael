@@ -66,7 +66,7 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 100
-  Output Intervals = 1
+  Output Intervals = 25
   Timestep Sizes = 0.05
 
   Initialize Dirichlet Conditions = Logical False
@@ -275,7 +275,7 @@ Solver 2
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael_SMB.nc"
+  Filename = File "Derwael_SMB_Smoothed.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
@@ -823,7 +823,7 @@ Boundary Condition 5
   Weertman Exponent = Real $(1.0/3.0)
   Weertman Linear Velocity = Real 0.001
   ! Options are 'Last Grounded' (default), 'First Floating' or 'Discontinuous'
-    Grounding Line Definition = String "First Floating" ! Change this to Discontinuous at some point
+    Grounding Line Definition = String "Discontinuous" ! Change this to Discontinuous at some point
   Test Contact Tolerance = real 1.0e-3
   Non Detachment Inland Distance = Real 5000.0 ! distance from the GL where nodes
 
@@ -850,18 +850,20 @@ Boundary Condition 5
     Real MATC "tx"
 
   ! Temperature
-  !Temp = Variable Depth
-  !  Real MATC "pressuremeltingpoint(tx)"
-  Temp = Real 272.0
+  Temp = Variable Depth
+    Real MATC "pressuremeltingpoint(tx)"
+  Temp Condition = Variable GroundedMask
+    Real MATC "(tx-0.5)*(-1)"
+  !Temp = Real 272.0
   !Temp Condition = Variable GroundedMask
   !  Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
   Temp Flux BC = Logical True
-  Temp Heat Flux = Real 0.0
+  !Temp Heat Flux = Real 0.0
   !Temp Heat Flux = Variable GroundedMask
   !	Real MATC "if (tx(0)>=0.0) {50.0} else {0.0}"
-  !Temp Heat Flux = Variable GroundedMask
-  !              Real MATC "if (tx(0)>0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 200 mW m-2
+  Temp Heat Flux = Variable GroundedMask
+                Real MATC "if (tx(0)>0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 50 mW m-2
 
 End
 
