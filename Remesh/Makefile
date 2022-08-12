@@ -5,10 +5,9 @@
 
 EXECUTABLES = src/DistanceSolverRD 
 
-
-NumProcs=80
+NumProcs=100
 NumProcx=10
-NumProcy=8
+NumProcy=10
 NumProcz=1
 
 InputSif=Forward.sif
@@ -25,7 +24,7 @@ grid:
 
 submit: ini
 
-	mpirun -n 80 ElmerSolver_mpi
+	mpirun -n 100 ElmerSolver_mpi
 
 compile:  
 	elmerf90 src/DistanceSolveRD.f90 -o src/DistanceSolveRD
@@ -41,6 +40,6 @@ ini:
 	echo Init.sif > ELMERSOLVER_STARTINFO
 
 .f90:
-	elmerf90  -o Init.sif 10 8 1 80 Mistral $<
+	elmerf90  -o Init.sif 10 10 1 100 Mistral $<
 .c:
-	gcc  -o Init.sif 10 8 1 80 Mistral $< -lm
+	gcc  -o Init.sif 10 10 1 100 Mistral $< -lm
