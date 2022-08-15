@@ -15,7 +15,7 @@ $A = 1.0e-26*yearinsec*1.0e18
 $n = 3.0
 $eta = 1.0/(2.0*A)^(1.0/n)
 $gravity = -9.8*yearinsec^2
-$C = 3.812e7/(1.0e6*yearinsec^(1.0/3.0))
+$C = 7.624e8/(1.0e6*yearinsec^(1.0/3.0))
 
 !! conductivity
 $ function conductivity(T)  { _conductivity=9.828*exp(-5.7E-03*T)}
@@ -66,8 +66,8 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 100
-  Output Intervals = 25
-  Timestep Sizes = 0.05
+  Output Intervals = 10
+  Timestep Sizes = 0.1
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -195,7 +195,7 @@ Material 1
   ! the gas constant also is
   Activation Energy 1 = Real 60e3
   Activation Energy 2 = Real 139e3
-  Glen Enhancement Factor = Real 0.25
+  Glen Enhancement Factor = Real 0.4 ! originally 0.25
   ! the variable taken to evaluate the Arrhenius law
   ! in general this should be the temperature relative
   ! to pressure melting point. The suggestion below plugs
@@ -275,7 +275,7 @@ Solver 2
   Procedure = "GridDataReader" "GridDataReader"
 
   !---- NOTE: File is case sensitive, String is not!
-  Filename = File "Derwael_SMB_Smoothed.nc"
+  Filename = File "Derwael_SMB_Combined_IceEquiv.nc"
   !Time Dim Name = String "time"
   X Dim Name = String "x"
   Y Dim Name = String "y"
@@ -609,44 +609,44 @@ Solver 17
   Filename = File "Time.dat"
 End
 
+!Solver 18
+!  Exec Solver   = "Never"!"Before All"
+!  Equation      = "Age Equation"
+!  Variable      = String "Age"
+!  Variable DOFs =  1
+!  Flow Solution Name = String "Flow Solution"
+!  Linear System Solver = Iterative
+!  Linear System Max Iterations = 1
+!  Linear System Iterative Method = Diagonal
+!  Linear System Preconditioning = NoNe
+!  Linear System Convergence Tolerance = Real 1.0e-6
+!  Linear System Abort Not Converged = False
+!  Linear System Residual Output = 0
+!  Procedure = "./src/AgeSolver" "AgeSolver"
+!End
+
 Solver 18
-  Exec Solver   = "Never"!"Before All"
-  Equation      = "Age Equation"
-  Variable      = String "Age"
-  Variable DOFs =  1
+  Exec Solver = Never
+  Equation = "Age Equation"
+
+  Variable = String "Age"
+  Variable DOFs =  1 
+
   Flow Solution Name = String "Flow Solution"
   Linear System Solver = Iterative
-  Linear System Max Iterations = 1
+  ! Linear System Max Iterations = 1000 
   Linear System Iterative Method = Diagonal
-  Linear System Preconditioning = NoNe
+  Linear System Preconditioning = NoNe 
   Linear System Convergence Tolerance = Real 1.0e-6
   Linear System Abort Not Converged = False
   Linear System Residual Output = 0
-  Procedure = "./src/AgeSolver" "AgeSolver"
-End
-
-!Solver 18
-!  !Exec Solver = Never
-!  Equation = "Age Equation"
-!
-!  Variable = String "Age"
-!  Variable DOFs =  1 
-!
-!  Flow Solution Name = String "Flow Solution"
-  ! Linear System Solver = Iterative
-  ! Linear System Max Iterations = 1000 
-  ! Linear System Iterative Method = Diagonal
-  ! Linear System Preconditioning = NoNe 
-  ! Linear System Convergence Tolerance = Real 1.0e-6
-  ! Linear System Abort Not Converged = False
-  ! Linear System Residual Output = 0
 !  Linear System Solver = Direct
 !  Linear System Direct Method = mumps
 !  mumps percentage increase working space = integer 1000 
-!
-!  Procedure = "./src/AgeSolverRD" "AgeSolver"
-!  Exported Variable 1 = -dofs 1 "age"
-!End
+
+  Procedure = "./src/AgeSolverRD" "AgeSolver"
+  Exported Variable 1 = -dofs 1 "age"
+End
 
 Solver 19
   !Exec Solver = Never
@@ -850,18 +850,15 @@ Boundary Condition 5
     Real MATC "tx"
 
   ! Temperature
-  Temp = Variable Depth
+  External Temperature = Variable Depth
     Real MATC "pressuremeltingpoint(tx)"
+  Heat Transfer Coefficient = 5.0
+!  Temp = Variable Depth
+!    Real MATC "pressuremeltingpoint(tx)"
   Temp Condition = Variable GroundedMask
     Real MATC "(tx-0.5)*(-1)"
-  !Temp = Real 272.0
-  !Temp Condition = Variable GroundedMask
-  !  Real MATC "(tx-0.5)*(-1)"
   ! geothermal heatflux !-------------------
   Temp Flux BC = Logical True
-  !Temp Heat Flux = Real 0.0
-  !Temp Heat Flux = Variable GroundedMask
-  !	Real MATC "if (tx(0)>=0.0) {50.0} else {0.0}"
   Temp Heat Flux = Variable GroundedMask
                 Real MATC "if (tx(0)>0.0) {50*1E-03 * (31556926.0)*1.0E-06} else {0.0}" ! 50 mW m-2
 
@@ -875,5 +872,7 @@ Boundary Condition 6
   Body Id = 2
   ComputeNormal = Logical False
   Age = Real 0.0
-  Temp = Equals tsurf
+  External Temperature = Equals tsurf
+  Heat Transfer Coefficient = 5.0
+!  Temp = Equals tsurf
 End
