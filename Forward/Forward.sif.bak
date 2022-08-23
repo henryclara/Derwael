@@ -15,7 +15,7 @@ $A = 1.0e-26*yearinsec*1.0e18
 $n = 3.0
 $eta = 1.0/(2.0*A)^(1.0/n)
 $gravity = -9.8*yearinsec^2
-$C = 7.624e8/(1.0e6*yearinsec^(1.0/3.0))
+$C = 3e7/(1.0e6*yearinsec^(1.0/3.0))
 
 !! conductivity
 $ function conductivity(T)  { _conductivity=9.828*exp(-5.7E-03*T)}
@@ -65,8 +65,8 @@ Simulation
 
   Timestepping Method = "bdf"
   BDF Order = 1
-  Timestep Intervals = 100
-  Output Intervals = 10
+  Timestep Intervals = 10
+  Output Intervals = 1
   Timestep Sizes = 0.1
 
   Initialize Dirichlet Conditions = Logical False
@@ -626,7 +626,7 @@ End
 !End
 
 Solver 18
-  Exec Solver = Never
+!  Exec Solver = Never
   Equation = "Age Equation"
 
   Variable = String "Age"
@@ -671,7 +671,7 @@ Solver 19
   Nonlinear System Relaxation Factor = Real 9.999E-01
   ! uses the contact algorithm (aka Dirichlet algorithm)
   !-----------------------------------------------------
-  Apply Dirichlet = Logical True
+  Apply Dirichlet = Logical False
   Stabilize = True
   ! those two variables are needed in order to store
   ! the relative or homologous temperature as well
@@ -748,7 +748,8 @@ End
 
 !! Back
 Boundary Condition 1
-  Age = Real 0.0
+  Age = Variable Depth
+    Real MATC "tx/2.0"
   Name = "back"
   Target Boundaries = 2
 	Velocity 2 = Equals vy
@@ -765,12 +766,15 @@ End
 Boundary Condition 2
   Name = "left"
   Target Boundaries = 1
-  
+  Age = Variable Depth
+    Real MATC "tx/2.0"
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
   Zs = Equals zs0
   Zb = Equals zb0
+  Temp = Variable Depth, Height, tsurf
+    Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
 End
 
 !! BC Lateral Ice-Shelf (air or sea contact)
@@ -789,12 +793,16 @@ End
 Boundary Condition 4
   Name = "right"
   Target Boundaries = 3
-
+  Age = Variable Depth
+    Real MATC "tx/2.0"
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
   Zs = Equals zs0
   Zb = Equals zb0
+  Temp = Variable Depth, Height, tsurf
+    Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
+
 End
 
 Boundary Condition 5
