@@ -14,8 +14,6 @@ Name=$1
 # Create a directory to store model output
 mkdir -p Simulations/${Name}
 cp -r WriteOutGeo Simulations/${Name}/
-cp -r Refinement Simulations/${Name}/
-cp -r Forward Simulations/${Name}/
 cd Simulations/${Name}/WriteOutGeo/
 sbatch Submit.sh
 

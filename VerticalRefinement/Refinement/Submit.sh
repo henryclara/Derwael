@@ -6,7 +6,7 @@
 #SBATCH --get-user-env
 #SBATCH --account=bm1164
 #SBATCH --mail-user=clara.henry@mpimet.mpg.de
-#SBATCH --ntasks=220
+#SBATCH --ntasks=150
 #SBATCH --time=00:15:00
 #SBATCH --partition=compute
 #=================================================================================================================
@@ -51,4 +51,4 @@ export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
 make compile
 make ini
 make grid
-srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 220 ElmerSolver_mpi Forward.sif
+srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 150 ElmerSolver_mpi Forward.sif

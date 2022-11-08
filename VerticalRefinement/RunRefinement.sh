@@ -10,6 +10,7 @@ fi
 
 # Indicate a name for the new simulation
 Name=$1
+cp -r Refinement Simulations/${Name}/
 cp -r Simulations/${Name}/WriteOutGeo/Mesh/{mesh.*,WriteOutGeo*} Simulations/${Name}/Refinement/Mesh/
 cp -r Simulations/${Name}/WriteOutGeo/GeoOut/* Simulations/${Name}/Refinement/DEM/
 cd Simulations/${Name}/Refinement
