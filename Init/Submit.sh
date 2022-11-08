@@ -6,8 +6,8 @@
 #SBATCH --get-user-env
 #SBATCH --account=bm1164
 #SBATCH --mail-user=clara.henry@mpimet.mpg.de
-#SBATCH --ntasks=80
-#SBATCH --time=00:07:00
+#SBATCH --ntasks=100
+#SBATCH --time=00:20:00
 #SBATCH --partition=compute
 #=================================================================================================================
 spack load intel-oneapi-mpi@2021.5.0%intel@2021.5.0
@@ -52,4 +52,4 @@ export I_MPI_PMI_LIBRARY=/usr/lib64/libpmi2.so
 #make ini
 make grid
 #mpirun -n 80 ElmerSolver_mpi
-srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 80 ElmerSolver_mpi Init.sif
+srun -l --mpi=pmi2 --export=ALL --cpu_bind=cores --distribution=block:cyclic -n 100 ElmerSolver_mpi Init.sif

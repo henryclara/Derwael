@@ -66,8 +66,8 @@ Simulation
   Timestepping Method = "bdf"
   BDF Order = 1
   Timestep Intervals = 10
-  Output Intervals = 1
-  Timestep Sizes = 0.1
+  Output Intervals = 10
+  Timestep Sizes = 0.5
 
   Initialize Dirichlet Conditions = Logical False
   Steady State Max Iterations = 1
@@ -154,9 +154,9 @@ End
 
 Body Force 3
   !Zb Accumulation = Real 0.0
-  Zb Accumulation = Equals bmb
-  !Zb Accumulation = Variable Time
-  !  Real Procedure "src/USF_BMB" "GetBMB"
+  !Zb Accumulation = Equals bmb
+  Zb Accumulation = Variable Time
+    Real Procedure "src/USF_BMB" "GetBMB"
 End
 
 !---------------------------------------------------
@@ -201,13 +201,17 @@ Material 1
   ! to pressure melting point. The suggestion below plugs
   ! in the correct value obtained with TemperateIceSolver
 
+!  Min Zs = Real 10.0
   Min Zs = Variable "Bottom Zb"
     Real MATC "tx + 10.0"
   Max Zs = Real 1.0e6
 
   !! Bed condition
   Min Zb = Equals bedrock
-  Max Zb = Real 1.0e6
+  !Max Zb = Real 1.0e6
+  Max Zb = Variable "bedrock"
+    Real MATC "if (tx>-90.0) {1.0e6} else {-90.0}"
+
   Cauchy = Logical True
 
   Temperature Field Variable = String "Temp Homologous"
@@ -626,7 +630,7 @@ End
 !End
 
 Solver 18
-!  Exec Solver = Never
+  Exec Solver = Never
   Equation = "Age Equation"
 
   Variable = String "Age"
@@ -756,7 +760,8 @@ Boundary Condition 1
 	!Velocity 1 = Variable FluxInit
 	!	Real Procedure "src/BedrockBump" "IceFluxAtBack"
 	Velocity 1 = Equals vx
-  Zs = Equals zs0
+  Zs = Variable zb0
+    Real MATC "-tx/9.0"
   Zb = Equals zb0
   Temp = Variable Depth, Height, tsurf
     Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
@@ -771,7 +776,8 @@ Boundary Condition 2
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
-  Zs = Equals zs0
+  Zs = Variable zb0
+    Real MATC "-tx/9.0"
   Zb = Equals zb0
   Temp = Variable Depth, Height, tsurf
     Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"
@@ -798,7 +804,8 @@ Boundary Condition 4
   !Velocity 1 = Real 0.0
   Velocity 1 = Equals vx
   Velocity 2 = Equals vy
-  Zs = Equals zs0
+  Zs = Variable zb0
+    Real MATC "-tx/9.0"
   Zb = Equals zb0
   Temp = Variable Depth, Height, tsurf
     Real MATC "tx(2)+tx(0)*(pressuremeltingpoint(tx(0)+tx(1))-tx(2))/(tx(0)+tx(1))"

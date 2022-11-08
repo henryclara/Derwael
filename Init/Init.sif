@@ -60,7 +60,7 @@ End
 Simulation
   Coordinate System  = Cartesian 3D
   Simulation Type = transient
-  Extruded Mesh Levels = Integer 20
+  Extruded Mesh Levels = Integer 10
 
   Timestepping Method = "bdf"
   BDF Order = 1
@@ -183,13 +183,17 @@ Material 1
   !Limit Temperature = Real -10.0
 ! In case there is no temperature variable
   !Constant Temperature = Real -15.0
-
-  Min Zs = Variable "Bottom Zb"
-    Real MATC "tx + 10.0"
+  Min Zs = Real 10.0
+!  Min Zs = Variable "Bottom Zb"
+!    Real MATC "tx + 10.0"
   Max Zs = Real 1.0e6
 
   !! Bed condition
   Min Zb = Equals bedrock
+
+!  Max Zb = Variable "bedrock"
+!    Real MATC "if (tx>-90.0) {1.0e6} else {-90.0}"
+
   Max Zb = Real 1.0e6
   !Cauchy = Logical True
 

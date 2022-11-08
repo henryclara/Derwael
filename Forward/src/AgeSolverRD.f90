@@ -356,7 +356,11 @@ SUBROUTINE AgeSolver( Model,Solver,dt,TransientSimulation )
      !! Note To Carlos: Putting xm to the closest node is done for all partition boundaries,
      !! (i.e. AtInterface == TRUE) which I don't think is what we want.
      Owner = (Solver %  Mesh % ParallelInfo % NeighbourList(k) % Neighbours(1) == ParEnv % MyPE)
-     ! AtInterface = Solver % Mesh % ParallelInfo % INTERFACE(k)   !! [VV]
+
+     IF (ParEnv % PEs .gt. 1) THEN
+        AtInterface = Solver % Mesh % ParallelInfo % NodeInterface(k)   !! This line previously had a bug in it (INTERFACE instead
+                                                                        !! of  NodeInterface) CH
+     END IF
 
      IF(.NOT.IsThere) THEN
          IsThere=ClosestPointInBoundary(Element, ElementNodes, NodeIndexes, n, xm, LocalCoordinates,eps2, &

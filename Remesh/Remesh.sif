@@ -42,9 +42,9 @@ Body Force 1
 Distance = Real 0.0
 Distance Condition = Variable GroundedMask
 Real MATC "tx"
-ElementSize = Real 1000.0
-!ElementSize = Variable Distance
-!REAl MATC "if (tx<30000) {250} else {2000}"
+!ElementSize = Real 1000.0
+ElementSize = Variable Distance
+  REAl MATC "if (tx(0)<5000) {500} else {2000}"
 !ElementSize = Variable Coordinate 1
 !REAL MATC "if (abs(tx-115000)<15000) {500} else {2000}"
 END
@@ -86,7 +86,7 @@ End
 
 Solver 2
 !Exec Solver = Never
-!Exec Solver = "Before All"
+Exec Solver = "Before All"
 !Exec Solver = "Before Simulation"
 Equation = GroundedMask
 Procedure = "src/GroundedMaskSolver" "GroundedMaskSolver"
@@ -152,7 +152,7 @@ End
 Solver 5
 !! mandatory else Model % Mesh % Changed reset to .FALSE. in coupled simulations
 !Exec Solver = Never
-!Exec Solver = after timestep
+Exec Solver = after timestep
 
 Equation = "MMG"
 Procedure = "ElmerIce_MeshAdapt2D" "MMG2DSolver"
