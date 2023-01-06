@@ -170,7 +170,7 @@ End
 !! ice material properties in MPa - m - a system
 Material 1
   !Viscosity Model = String "power law"
-  !Density = Real $rhoi
+  Density = Real $rhoi
   !Viscosity = Real $eta
   !Viscosity Exponent = Real $1.0/n
   !Critical Shear Rate = Real 1.0e-15
@@ -357,7 +357,7 @@ Solver 7
   Linear System Direct Method = "Mumps"
 	Mumps percentage increase working space = Integer 1600
 
-  Nonlinear System Max Iterations = 5
+  Nonlinear System Max Iterations = 50
   Nonlinear System Convergence Tolerance  = 1.0e-5
   Nonlinear System Newton After Iterations = 50
   Nonlinear System Newton After Tolerance = 1.0e-05
