@@ -12,9 +12,10 @@ fi
 Name=$1
 
 # Create a directory to store model output
-mkdir -p Simulations/${Name}/{Mesh,Logs}
+mkdir -p Simulations/${Name}/{Mesh,Logs,BoundaryConditions}
 cp -r ../Init/Mesh/{mesh*,partitioning.100,Forward000000.result.*} Simulations/${Name}/Mesh
-cp -r {Forward.sif.bak,Submit.sh,Submit0.sh,Derwael_SMB_Combined_Year*,Derwael_SMB_Combined_IceEquiv*,DerwaelBCs.nc,Derwael_SMB.nc,Derwael_BMB.nc,Derwael_SurfTemp.nc,ModulesPlusPaths2LoadIntelMPI.sh,Makefile,src} Simulations/${Name}
+cp -r BoundaryConditions/Derwael* Simulations/${Name}/BoundaryConditions
+cp -r {Forward.sif.bak,Submit.sh,Submit0.sh,ModulesPlusPaths2LoadIntelMPI.sh,Makefile,src} Simulations/${Name}
 
 cd Simulations/${Name}
 
